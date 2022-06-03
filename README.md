@@ -16,18 +16,18 @@ This raw data may also contain incorrect or artificial entries as well as additi
 
 ## Exploratory Data Analysis
 
-All data points have the features: id, Name, Latitude, Longitude, Country, and POI.
+All data points have the features: id, name, latitude, longitude, country, and point of interest (POI).
 However a data point can also have features: address, city, state, zip, url, phone, and categories. 
 A lot of data points are sparse and missing these additional features, instead they contain a NaN entry. 
 The data supplied by [Kaggle](https://www.kaggle.com/competitions/foursquare-location-matching)
-also contained a pairs dataset where each entry is data points from our train set and the additional feature ‘match’ which is boolean and specifies whether two points are a match.
+also contained a pairs dataset where each entry is data points from our train set and the additional feature ‘match’ which is boolean and specifies whether two points are a match, ie. they describe the same POI.
 
 Initally, we assumed location would be an important category. We were only given latitude and longitude coordinates so we used these to compute a simple Euclidean distance between two points.
 We added this to our pairs data set as the 'distance' feature.
 We found that there are many data points which are within short distances from one another that are not matches. 
-A couple of hundred data points were also given to us as matches, while being nowhere near each other in terms of location.
+Conversely, a couple of hundred pairs were also given to us as matches, while being nowhere near each other in terms of location.
 
-We first began to train models on features guarenteed to be in each datapoint as well as the feature 'categories' as it was the optional feature with the highest proportion of non-missing entries.
+We first began to train models on the features: categorgies, name, and distance. Both 'name' and 'distance' are features which are guaranteed with every observation. The feature 'categories' is an optional feature with the lowest proportion of missing data. 
 
 ## Process
 
@@ -36,10 +36,12 @@ These features include 'name', 'address', 'categories', 'city', 'state', 'url', 
 We used the [Tfidf vectorizer](https://scikit-learn.org/stable/modules/generated/sklearn.feature_extraction.text.TfidfVectorizer.html)
 in sk-learn to vectorize our training set.
 
-2. We also attempted to clean our data by removing matches which were above the 99th quaritle for geodesic distance. 
+2. We also attempted to clean our data by removing matches which were above the 99th quartile for geodesic distance. 
 However, this had no effect on any of our models accuracy and so we decided to continue training and testing models with unclean data.
 
-3. Missing data was initally entered with zero imputation. Once we found our most accurate model we also tested training with mean inputed data. 
+3. With our vectorized data, we computed similarities between the features of the observations in pairs. That is, we used cosine-similarity to calculate a similarity score between the names, categories, and any other features we wanted to use. For example, the strings "1 Towne Centre Blvd #2800" and "1 Towne Centre Blvd" might have a similarity index of 0.8036. 
+
+4. Sometimes we were unable to compute similarities scores due to missing data. If one observation had a recorded address "1 Towne Centre Blvd #2800" and another had a "NaN" address, we had to choose how to impute this similarity. We initially went with a method of zero-imputation, designating any similarity to "NaN" values as 0. Once we found our most accurate model we also trained and tested with mean inputed data from those similarity scores which could be computed in the previous step. 
 
 ## Models
 
@@ -70,14 +72,14 @@ This means our model does not handle new data entries well, and so it does not e
 We hope to revectorize our data using BERT, a pretrained natural language processor. This should overall improve our model significantly. 
 
 2. Data cleaning is a difficult problem to solve with this data set. 
-We tested cleaning based on distance, but we also want to looki into cleaning our data through other features as well. 
+We tested cleaning based on distance, but we also want to look into cleaning our data through other features as well. 
 We believe that erroneous data possibly occurs in the 'categories' and 'address' features.
 
 3. Our model had a precision of 0.8988. We want to look into false positives and false negatives in our model so that we can fine tune
 our models matching capabilities. We are also hoping that BERT will help improve our precision.
 
 # Slides
-Additional information may be easily found within our project slides:
+Additional information may be found within our project slides which can be found above. 
 
 
 
