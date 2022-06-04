@@ -5,7 +5,7 @@ This problems purpose is to deduplicate raw location data.
 This project is part of The Erdos Institute's [data science boot camp](https://www.erdosinstitute.org/code) 
 and is a proposed model for a [Kaggle competition sponsored by Foursquare](https://www.kaggle.com/competitions/foursquare-location-matching).
 Raw data contains over half a million locations of commercial points of interest around the world. 
-This raw data may also contain incorrect or artificial entries as well as additional noise. 
+This raw data may also contain incorrect or artificial entries as well as additional noise (The raw data is not included due to the nature of the Kaggle competition).
 
 ## Table of contents
 - [Exploratory Data Analysis](#EDA)
